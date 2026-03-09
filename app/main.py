@@ -1,6 +1,13 @@
 from fastapi import FastAPI
+from dotenv import load_dotenv
+import os
 
-app = FastAPI(title="Expense Analytics API", version="0.1.0")
+load_dotenv()
+
+
+app_name=os.environ.get("APP_NAME","Default Title")
+
+app = FastAPI(title=app_name, version="0.1.0")
 
 @app.get("/")
 def read_root():

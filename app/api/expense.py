@@ -1,12 +1,12 @@
 from fastapi import APIRouter, HTTPException
 
-from app.schemas.expense import ExpenseCreate, ExpenseUpdate
+from app.schemas.expense import ExpenseCreate, ExpenseUpdate, ExpenseResponse
 
-router = APIRouter()
+router = APIRouter(prefix="/expenses", tags=["expenses"])
 
 expenses_db = []
 
-@router.post("/expenses", status_code=201)
+@router.post("/", status_code=201, response_model=ExpenseResponse)
 def create_expense(expense: ExpenseCreate):
     expense_value = expense.model_dump()
     expense_value["id"]= len(expenses_db) + 1
@@ -15,11 +15,11 @@ def create_expense(expense: ExpenseCreate):
     return expense_value
 
 
-@router.get("/expenses")
+@router.get("/", response_model=list[ExpenseResponse])
 def get_expenses():    
     return expenses_db
 
-@router.get("/expenses/{expense_id}")
+@router.get("/{expense_id}", response_model=ExpenseResponse)
 def get_expense(expense_id: int):
     for expense in expenses_db:
         if expense["id"] == expense_id:
@@ -27,7 +27,7 @@ def get_expense(expense_id: int):
     raise HTTPException(status_code=404, detail="Expense not found")
 
 
-@router.put("/expenses/{expense_id}")
+@router.put("/{expense_id}", response_model=ExpenseResponse)
 def update_expense(expense_id: int, expense_update: ExpenseUpdate):
     for expense in expenses_db:
         if expense['id'] == expense_id:
@@ -38,7 +38,7 @@ def update_expense(expense_id: int, expense_update: ExpenseUpdate):
 
 
 
-@router.delete("/expenses/{expense_id}")
+@router.delete("/{expense_id}")
 def delete_expense(expense_id: int):
     for  expense in expenses_db:
         if expense['id'] == expense_id:

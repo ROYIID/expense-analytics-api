@@ -12,3 +12,11 @@ class ExpenseUpdate(BaseModel):
     category : str =None
     description : str = None
     date : str = None
+
+
+class ExpenseResponse(BaseModel):
+    id : int
+    amount : float
+    category : str
+    description : str = None
+    date : str = None

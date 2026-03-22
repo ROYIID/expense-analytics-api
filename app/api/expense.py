@@ -16,8 +16,16 @@ def create_expense(expense: ExpenseCreate):
 
 
 @router.get("/", response_model=list[ExpenseResponse])
-def get_expenses():    
-    return expenses_db
+def get_expenses(category: str = None,min_amount: float = None):
+    filtered_expenses = expenses_db
+    if category:
+        filtered_expenses = [expense for expense in filtered_expenses if expense["category"].lower() == category.lower()]
+    if min_amount is not None:
+        filtered_expenses = [expense for expense in filtered_expenses if expense["amount"] >= min_amount]
+    return filtered_expenses    
+
+
+
 
 @router.get("/{expense_id}", response_model=ExpenseResponse)
 def get_expense(expense_id: int):

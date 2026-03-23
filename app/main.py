@@ -1,14 +1,9 @@
 from fastapi import FastAPI
-from dotenv import load_dotenv
-import os
 from app.api import expense
+from app.core.config import settings
 
-load_dotenv()
 
-
-app_name=os.environ.get("APP_NAME","Default Title")
-
-app = FastAPI(title=app_name, version="0.1.0")
+app = FastAPI(title=settings.app_name, version="0.1.0")
 
 app.include_router(expense.router)
 
